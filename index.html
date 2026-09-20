@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#142c4e">
+  <meta name="description" content="Ranking interno de entrenamientos del equipo. Cada entrenamiento cuenta.">
+  <title>EIBAR · Ranking de entrenamientos</title>
+  <link rel="icon" href="./assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="./css/styles.css">
+  <script defer src="./assets/vendor/xlsx.full.min.js"></script>
+  <script defer src="./assets/vendor/chart.umd.min.js"></script>
+  <script type="module" src="./js/app.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#ranking">Saltar a la clasificación</a>
+  <header class="site-header">
+    <div class="header-inner"><a class="brand" href="./" aria-label="Eibar, inicio"><span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i></span>EIBAR</a><div class="header-actions"><span class="season" id="season"></span><button type="button" id="open-rules" class="info-button" aria-label="Información y normas del ranking" aria-haspopup="dialog" aria-controls="rules-dialog" title="Información y normas"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v6" stroke-linecap="round"/><circle cx="12" cy="7.5" r="1" fill="currentColor" stroke="none"/></svg></button></div></div>
+  </header>
+  <main class="container">
+    <section class="intro" aria-labelledby="page-title"><div><p class="eyebrow">EL ESFUERZO SUMA</p><h1 id="page-title">Ranking de<br class="mobile-break"> entrenamientos<span>.</span></h1></div><a class="outline-link" href="./data/ranking.xlsx" download>↓ <span>Descargar Excel</span></a></section>
+    <div id="status" class="status" role="status" aria-live="polite">Cargando clasificación...</div>
+    <div id="dashboard" hidden>
+      <section class="summary-grid" aria-label="Resumen del equipo" id="summary"></section>
+      <section class="leaders-section" aria-labelledby="leaders-title"><div class="section-heading"><div><p class="eyebrow">MARCANDO EL RITMO</p><h2 id="leaders-title">En lo más alto</h2></div><span class="subtle-label">TOP 5 ACTUAL</span></div><div class="podium" id="podium"></div></section>
+      <section class="ranking-section" id="ranking" aria-labelledby="ranking-title" tabindex="-1"><div class="section-heading"><div><p class="eyebrow">CADA PUNTO CUENTA</p><h2 id="ranking-title">Clasificación general</h2></div><span class="count-label" id="player-count"></span></div>
+        <div class="reward-note"><span class="top-badge">TOP 5</span><p>El esfuerzo tiene premio: las cinco primeras no traen comida a las merendolas de Navidad, Semana Santa y final de temporada.</p></div>
+        <div class="ranking-table" role="table" aria-label="Clasificación de jugadoras"><div class="ranking-row table-head" role="row"><span role="columnheader">Pos.</span><span role="columnheader">Jugadora</span><span role="columnheader">Puntos</span><span role="columnheader">Entrenos</span><span role="columnheader">Racha</span></div><div id="ranking-rows" role="rowgroup"></div></div>
+        <p class="table-hint">Pulsa en una jugadora para explorar sus estadísticas. <span>Racha = cambio de posición tras el último entrenamiento.</span></p>
+      </section>
+    </div>
+  </main>
+  <footer class="site-footer container"><span class="footer-brand">EIBAR<span> / </span> JUNTAS SUMAMOS</span><span>Uso interno del equipo</span></footer>
+  <dialog id="player-dialog" aria-labelledby="player-name"><div class="detail-toolbar"><span>FICHA DE JUGADORA</span><button type="button" id="close-detail" class="close-button" aria-label="Cerrar ficha">×</button></div><div id="player-content"></div></dialog>
+  <dialog id="rules-dialog" aria-labelledby="rules-title">
+    <div class="detail-toolbar"><span>INFORMACIÓN DEL RANKING</span><button type="button" id="close-rules" class="close-button" aria-label="Cerrar normas">×</button></div>
+    <div class="rules-body">
+      <p class="eyebrow">LAS REGLAS DEL EQUIPO</p>
+      <h2 id="rules-title">¿Cómo funciona?</h2>
+      <p>El ranking suma el trabajo de cada entrenamiento. Estas son las normas y las claves para interpretar tus estadísticas.</p>
+      <section><h3>01 · Puntos y clasificación</h3><p>Se suman todas tus puntuaciones. Gana posición quien tenga más puntos; si hay empate, quien haya asistido a más entrenamientos. Si el empate continúa, se ordena por nombre alfabéticamente. <strong>La media no desempata.</strong></p><p>Cualquier puntuación numérica, incluido un 0, cuenta como asistencia. Un guion o una celda vacía indica ausencia: no suma puntos ni asistencias.</p></section>
+      <section><h3>02 · El premio del Top 5</h3><p>Las cinco primeras están exentas de traer comida a las merendolas de <strong>Navidad, Semana Santa y final de temporada</strong>.</p></section>
+      <section><h3>03 · Qué significa la flecha de «Racha»</h3><p>Compara tu posición actual con la que tenías antes del último entrenamiento, aplicando los mismos desempates.</p><ul class="rules-arrows"><li><span class="movement up" aria-hidden="true">↑ 2</span> Has subido dos posiciones.</li><li><span class="movement down" aria-hidden="true">↓ 1</span> Has bajado una posición.</li><li><span class="movement neutral" aria-hidden="true">→</span> Mantienes tu posición.</li><li><span class="movement neutral" aria-hidden="true">—</span> Solo hay un entrenamiento; aún no se puede comparar.</li></ul><p>Esta flecha mide posiciones, no asistencias consecutivas.</p></section>
+      <section><h3>04 · Tu ficha individual</h3><p>Pulsa tu nombre, cualquier parte de tu fila o tu tarjeta del Top 5 para abrirla.</p><dl class="rules-definitions">
+        <dt>Media de puntuación</dt><dd>Tus puntos divididos entre tus entrenamientos asistidos. Si no has asistido, es 0.</dd>
+        <dt>Racha de entrenamientos y mejor racha</dt><dd>La racha actual cuenta tus asistencias consecutivas más recientes; vuelve a 0 si faltas al último entrenamiento. La mejor racha es tu máximo de asistencias seguidas.</dd>
+        <dt>Distancia al Top 5</dt><dd>Fuera del Top 5: tus puntos menos los de la quinta. Dentro: tus puntos menos los de la sexta. Con menos de seis jugadoras aparece «—». Una distancia de 0 sigue dependiendo de los desempates.</dd>
+        <dt>Tendencia de puntuación</dt><dd>Compara tus tres últimas puntuaciones con las tres anteriores, saltando ausencias. Con una diferencia menor de 0,25 puntos se considera estable; desde +0,25, mejorando; desde −0,25, bajando. Necesita seis puntuaciones.</dd>
+        <dt>Últimos cinco entrenamientos</dt><dd>Muestra las cinco últimas sesiones del calendario y los puntos sumados en ellas. «AUS» significa ausencia. La media de los últimos cinco entrenamientos asistidos usa, en cambio, tus cinco últimas puntuaciones numéricas.</dd>
+        <dt>Regularidad</dt><dd>Mide cuánto varían tus puntuaciones respecto a tu media, mediante su desviación estándar. Hasta 0,75: muy regular; hasta 1,50: regular; por encima: variable. Necesita al menos tres puntuaciones y no afecta a la clasificación.</dd>
+        <dt>Comparación con el equipo</dt><dd>La media del equipo usa todas las puntuaciones y asistencias registradas. La diferencia indica cuánto está tu media por encima o por debajo.</dd>
+      </dl></section>
+      <section><h3>05 · Cómo leer los gráficos</h3><p><strong>Puntuación:</strong> el resultado de cada sesión; una ausencia deja un hueco, nunca un cero. <strong>Clasificación:</strong> tu posición tras cada entrenamiento, con la primera arriba. <strong>Acumulado:</strong> la suma progresiva de puntos; si faltas, se mantiene.</p><p>Toca un punto para ver su detalle o despliega «Ver datos del gráfico». En el historial encontrarás todas las sesiones, de la más reciente a la más antigua.</p></section>
+      <p class="rules-footnote">Los datos se actualizan desde el Excel al cargar la página. Las estadísticas complementarias son informativas: el ranking solo depende de puntos, asistencias y nombre.</p>
+    </div>
+  </dialog>
+  <noscript><p class="status">Activa JavaScript para leer el Excel y mostrar el ranking.</p></noscript>
+</body>
+</html>
